@@ -23,6 +23,10 @@ public class GuidUpdateView extends View {
      */
     private int margLeftForTop = 100;
     /**
+     * topview 距 顶距离
+     */
+    private int margTopForTop = 100;
+    /**
      * a按钮距 上面 的 topview的间距
      */
     private int margain_bt_top = 20;
@@ -30,6 +34,7 @@ public class GuidUpdateView extends View {
      * bt 1 view 距 左边距离
      */
     private int margLeftForB1 = 100;
+
     private int btViewWidth=350;
     private int btViewHeight=350;
 
@@ -64,18 +69,21 @@ public class GuidUpdateView extends View {
     private Bitmap bitmapB2;
     private Bitmap bitmapSkip;
 
-    public static GuidUpdateView newInstance(Context context) {
+    public static GuidUpdateView newInstance(Context context,float alphaValue) {
         GuidUpdateView instanceView = new GuidUpdateView(context);
         instanceView.invalidate();
         instanceView.setVisibility(View.GONE);
 
         final WindowManager.LayoutParams relLayoutParams = new WindowManager.LayoutParams();
-        relLayoutParams.alpha = 0.98f;
+        relLayoutParams.alpha = alphaValue;
         // 获取WindowManager
         WindowManager mWindowManager = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         mWindowManager.addView(instanceView, relLayoutParams);
         return instanceView;
+    }
+    public static GuidUpdateView newInstance(Context context){
+        return GuidUpdateView.newInstance(context,0.98f);
     }
 
     public GuidUpdateView(Context context) {
@@ -91,10 +99,63 @@ public class GuidUpdateView extends View {
 
     }
 
-    public void showGuidUpdateView(){
+    //开放一些 方法 外部设置
+
+    /**
+     * 设置 topview 距离屏幕左边界的距离
+     * @param value
+     */
+    public void GUV_setMarginLeftForTopview(int value){
+        margLeftForTop = value;
+    }
+    /**
+     * 设置 topview 距离屏幕上边界的距离
+     * @param value
+     */
+    public void GUV_setMarginTopForTopview(int value){
+        margTopForTop = value;
+    }
+    /**
+     * 设置 topview 距离 下方 按钮顶部的距离
+     * @param value
+     */
+    public void GUV_setMarginHeightBetweenTopviewAndBt(int value){
+        margain_bt_top = value;
+    }
+    /**
+     * 设置 按钮1 到 屏幕左边界的距离
+     * @param value
+     */
+    public void GUV_setMarginLeftForBT1(int value){
+        margLeftForB1 = value;
+    }
+    /**
+     * 设置 按钮 的尺寸
+     * @param
+     */
+    public void GUV_setSizeForBt(int w,int h){
+        btViewWidth = w;
+        btViewHeight = h;
+    }
+    /**
+     * 设置 skip 到 屏幕右边界的距离
+     * @param value
+     */
+    public void GUV_setMarginRightForSkip(int value){
+        margain_skip_right = value;
+    }
+    /**
+     * 设置 skip 到 屏幕底边界的距离
+     * @param value
+     */
+    public void GUV_setMarginBottomForSkip(int value){
+        margain_skip_bottom = value;
+    }
+
+    public void GUV_show(){
         this.setVisibility(VISIBLE);
     }
-    public void hiddenGuidUpdateView(){
+    public void GUV_dismiss(){
         this.setVisibility(GONE);
     }
 
@@ -109,7 +170,7 @@ public class GuidUpdateView extends View {
         Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStrokeWidth(3);
 
-        //绘制 半透明的 背景
+        //绘制 背景
         Rect fullRect = new Rect(0, 0, canvasWidth, canvasHeight);
         mPaint.setColor(Color.argb(255, 53, 54, 54));
         canvas.drawRect(fullRect, mPaint);
@@ -122,7 +183,7 @@ public class GuidUpdateView extends View {
         topViewHeight = topViewWidth;
 
         Rect mbitmapTopViewSrcRect = new Rect(0, 0, bitmapTopView.getWidth(), bitmapTopView.getHeight());
-        mbitmapTopViewDestRect = new Rect(margLeftForTop, 0, topViewWidth+margLeftForTop, topViewHeight);
+        mbitmapTopViewDestRect = new Rect(margLeftForTop, margTopForTop, topViewWidth+margLeftForTop, topViewHeight);
         canvas.drawBitmap(bitmapTopView, mbitmapTopViewSrcRect, mbitmapTopViewDestRect, mPaint);
 
         //绘制 左边按钮图片 图片
@@ -152,6 +213,7 @@ public class GuidUpdateView extends View {
         if (keyCode == KeyEvent.KEYCODE_BACK){
             //用户点击了返回,相当于 点击了skip
             if (null != this.iGuidUpdateViewClickListener){
+                GUV_dismiss();
                 iGuidUpdateViewClickListener.onSkipClickListener();
             }
         }
@@ -175,6 +237,7 @@ public class GuidUpdateView extends View {
             }else if (isClickedBT2(clickXInt,clickYInt)){
                 this.iGuidUpdateViewClickListener.onBT2ClickListener();
             }else if (isClickedSkip(clickXInt,clickYInt)){
+                GUV_dismiss();
                 this.iGuidUpdateViewClickListener.onSkipClickListener();
             }
         }

@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
         init();
 
         guidUpdateView = GuidUpdateView.newInstance(this);
+        guidUpdateView.GUV_setMarginTopForTopview(100);
 
         guidUpdateView.setiGuidUpdateViewClickListener(new GuidUpdateView.IGuidUpdateViewClickListener() {
             @Override
@@ -35,7 +36,7 @@ public class MainActivity extends Activity {
             @Override
             public void onSkipClickListener() {
                 Log.e(TAG, "点击了 Skip");
-                guidUpdateView.hiddenGuidUpdateView();
+                guidUpdateView.GUV_dismiss();
             }
         });
     }
@@ -53,7 +54,7 @@ public class MainActivity extends Activity {
             @Override
             public void onCircleButtonClickListener() {
                 //点击了原型按钮
-                guidUpdateView.showGuidUpdateView();
+                guidUpdateView.GUV_show();
             }
         });
 
