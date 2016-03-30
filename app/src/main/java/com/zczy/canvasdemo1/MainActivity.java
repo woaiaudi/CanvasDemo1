@@ -1,23 +1,43 @@
 package com.zczy.canvasdemo1;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.zczy.canvasdemo1.CustomView.DemoView1;
 import com.zczy.guidupdateview.GuidUpdateView;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
     private static String TAG = MainActivity.class.getSimpleName();
+
+    private GuidUpdateView guidUpdateView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
 
-        initGuidView();
+        guidUpdateView = GuidUpdateView.newInstance(this);
+
+        guidUpdateView.setiGuidUpdateViewClickListener(new GuidUpdateView.IGuidUpdateViewClickListener() {
+            @Override
+            public void onBT1ClickListener() {
+                Log.e(TAG, "点击了 BT1");
+            }
+
+            @Override
+            public void onBT2ClickListener() {
+                Log.e(TAG, "点击了 BT2");
+            }
+
+            @Override
+            public void onSkipClickListener() {
+                Log.e(TAG, "点击了 Skip");
+                guidUpdateView.hiddenGuidUpdateView();
+            }
+        });
     }
 
     private void init() {
@@ -33,33 +53,9 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onCircleButtonClickListener() {
                 //点击了原型按钮
+                guidUpdateView.showGuidUpdateView();
             }
         });
 
-    }
-
-
-    private void initGuidView(){
-        GuidUpdateView guidUpdateView = new GuidUpdateView(this);
-        guidUpdateView.invalidate();
-        LinearLayout.LayoutParams relLayoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
-        this.addContentView(guidUpdateView,relLayoutParams);
-
-        guidUpdateView.setiGuidUpdateViewClickListener(new GuidUpdateView.IGuidUpdateViewClickListener() {
-            @Override
-            public void onBT1ClickListener() {
-                Log.e(TAG,"点击了 BT1");
-            }
-
-            @Override
-            public void onBT2ClickListener() {
-                Log.e(TAG,"点击了 BT2");
-            }
-
-            @Override
-            public void onSkipClickListener() {
-                Log.e(TAG,"点击了 Skip");
-            }
-        });
     }
 }

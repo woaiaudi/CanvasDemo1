@@ -8,8 +8,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 
 /**
  * Created by mac on 16/3/29.
@@ -62,9 +64,22 @@ public class GuidUpdateView extends View {
     private Bitmap bitmapB2;
     private Bitmap bitmapSkip;
 
+    public static GuidUpdateView newInstance(Context context) {
+        GuidUpdateView instanceView = new GuidUpdateView(context);
+        instanceView.invalidate();
+        instanceView.setVisibility(View.GONE);
+
+        final WindowManager.LayoutParams relLayoutParams = new WindowManager.LayoutParams();
+        relLayoutParams.alpha = 0.98f;
+        // 获取WindowManager
+        WindowManager mWindowManager = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        mWindowManager.addView(instanceView, relLayoutParams);
+        return instanceView;
+    }
+
     public GuidUpdateView(Context context) {
         super(context);
-
         mResources = getResources();
 
         //实例化的时候 将图片资源加载进来,避免每次 draw时加载
@@ -75,6 +90,14 @@ public class GuidUpdateView extends View {
         bitmapSkip =((BitmapDrawable)mResources.getDrawable(R.drawable.guid_update_skip)).getBitmap();
 
     }
+
+    public void showGuidUpdateView(){
+        this.setVisibility(VISIBLE);
+    }
+    public void hiddenGuidUpdateView(){
+        this.setVisibility(GONE);
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -88,7 +111,7 @@ public class GuidUpdateView extends View {
 
         //绘制 半透明的 背景
         Rect fullRect = new Rect(0, 0, canvasWidth, canvasHeight);
-        mPaint.setColor(Color.argb(220, 53, 54, 54));
+        mPaint.setColor(Color.argb(255, 53, 54, 54));
         canvas.drawRect(fullRect, mPaint);
 
         mPaint.setFilterBitmap(true);
@@ -122,6 +145,18 @@ public class GuidUpdateView extends View {
         mbitmapSkipDestRect = new Rect(canvasWidth-margain_skip_right-bitmapSkip.getWidth()
                 , canvasHeight-margain_skip_bottom-bitmapSkip.getHeight(), canvasWidth-margain_skip_right, canvasHeight-margain_skip_bottom);
         canvas.drawBitmap(bitmapSkip, mbitmapSkipSrcRect, mbitmapSkipDestRect, mPaint);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            //用户点击了返回,相当于 点击了skip
+            if (null != this.iGuidUpdateViewClickListener){
+                iGuidUpdateViewClickListener.onSkipClickListener();
+            }
+        }
+        //返回true,拦截当前View的 点击事件,避免操作到下面一层view 的事件
+        return true;
     }
 
     @Override
