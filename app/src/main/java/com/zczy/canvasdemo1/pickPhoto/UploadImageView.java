@@ -11,10 +11,13 @@ import com.android.http.LoadControler;
 import com.android.http.RequestManager;
 import com.android.http.RequestMap;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 
 /**
@@ -31,37 +34,53 @@ public class UploadImageView extends ImageView {
     private static final String HOST_NAME = "http://172.168.10.168:8080";
     private static String URL_UPLOAD = HOST_NAME+"/mobile/app/mfileupload/uploadFile.xhtml";
 
-    public UploadImageView(Context context) {
-        super(context);
+
+    private void init(Context context){
+
         mContext = context;
         if (null == mZcZyPickPhotoDialog){
             mZcZyPickPhotoDialog = ZcZyPickPhotoDialog.newInstance(context);
         }
+    }
+    public UploadImageView(Context context) {
+        super(context);
+        init(context);
     }
 
     public UploadImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mContext = context;
-        if (null == mZcZyPickPhotoDialog){
-            mZcZyPickPhotoDialog = ZcZyPickPhotoDialog.newInstance(context);
-        }
+        init(context);
     }
 
     public UploadImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
-        if (null == mZcZyPickPhotoDialog){
-            mZcZyPickPhotoDialog = ZcZyPickPhotoDialog.newInstance(context);
-        }
+        init(context);
     }
+
+    /**
+     * 设置图片
+     * @param xxxx
+     */
+    public void UIV_LoadImage(String xxxx) {
+        ImageLoader.getInstance().displayImage(xxxx, this);
+    }
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (MotionEvent.ACTION_UP == event.getAction()){
             //点击了图片,首先判断image 是否有图片在展示,
+            if (this.getDrawable()!=null){
+                Log.e(TAG,"有图");
 
-            //wutup
-            mZcZyPickPhotoDialog.PPD_openOnView(this);
+                // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
+
+            }else{
+                Log.e(TAG,"无图");
+                //mZcZyPickPhotoDialog.PPD_openOnView(this);
+            }
+
         }
 
         return true;
@@ -140,5 +159,6 @@ public class UploadImageView extends ImageView {
 
     private static String loginUrl = HOST_NAME+"/mobile/app/mMember/doLogin.xhtml?password=DD4B21E9EF71E1291183A46B913AE6F2&userName=13000000002&mac=009acd134698b91d23bd18c01bbb866940022884506";
     private Map<String,Object> demoMap = new HashMap<String, Object>();
+
 
 }

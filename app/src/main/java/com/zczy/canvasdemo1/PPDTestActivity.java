@@ -27,6 +27,9 @@ public class PPDTestActivity extends ActionBarActivity {
 
         test_imageView_3 = (UploadImageView) findViewById(R.id.test_imageView_3);
         test_uploadBt_3 = (Button) findViewById(R.id.test_uploadBt_3);
+
+
+        test_imageView_1.UIV_LoadImage("http://img1.gtimg.com/sports/pics/hv1/111/32/2050/133309521.jpg");
     }
 
 
