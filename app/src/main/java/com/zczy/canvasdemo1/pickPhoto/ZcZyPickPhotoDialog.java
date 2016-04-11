@@ -34,6 +34,15 @@ import java.util.List;
 public class ZcZyPickPhotoDialog extends View {
     private static String TAG = ZcZyPickPhotoDialog.class.getSimpleName();
 
+    public enum ACTION_TYPE {
+        ACTION_TYPE_TAKE_PHOTO, ACTION_TYPE_PICK_IMAGE
+    }
+
+    /**
+     * 是拍照还是 选相册中
+     */
+    private ACTION_TYPE mActionType;
+
     private static final String  BOTTOM_BT_1 = "拍  照";
 
     private static final String  BOTTOM_BT_2 = "从相册选取";
@@ -161,7 +170,6 @@ public class ZcZyPickPhotoDialog extends View {
 
             int clickXInt = Float.valueOf(clickX).intValue();
             int clickYInt = Float.valueOf(clickY).intValue();
-
             if (null != bottomButtonList && bottomButtonList.size()>1){
                 int btCount = bottomButtonList.size();
                 for (int i = 0;i<btCount;i++){
@@ -174,7 +182,9 @@ public class ZcZyPickPhotoDialog extends View {
                             if (null != this.iPPDClickListener){
                                 iPPDClickListener.onTakePhotoBtClicked();
                             }
+
                             if (currentImageView.getId() > 0){
+                                mActionType = ACTION_TYPE.ACTION_TYPE_TAKE_PHOTO;
                                 PPDTools.takePhoto(mContext,currentImageView.getId());
                             }else{
                                 Log.e("error","调用PPD_openOnView时,没有指定viewId");
@@ -183,7 +193,12 @@ public class ZcZyPickPhotoDialog extends View {
                             if (null != this.iPPDClickListener){
                                 iPPDClickListener.onPickAlbumBtClicked();
                             }
-                            PPDTools.openAlbum(mContext);
+                            if (currentImageView.getId() > 0){
+                                mActionType = ACTION_TYPE.ACTION_TYPE_PICK_IMAGE;
+                                PPDTools.openAlbum(mContext,currentImageView.getId());
+                            }else{
+                                Log.e("error","调用PPD_openOnView时,没有指定viewId");
+                            }
                         }else if (BOTTOM_BT_CANCEL.equals(clickName)){
                             PPD_dismiss();
                             if (null != this.iPPDClickListener){
@@ -274,8 +289,13 @@ public class ZcZyPickPhotoDialog extends View {
     }
 
     public void PPD_onActivityResult(int requestCode, int resultCode, Intent data){
+        if (null == currentImageView || requestCode != IMGIDS.getInstance().queryRequestCode(currentImageView.getId())){
+            //使用 requestCode标示 请求是从哪个图片对象 发过来的
+            return;
+        }
+
         this.setVisibility(GONE);
-        if (requestCode == PPDTools.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (mActionType == ACTION_TYPE.ACTION_TYPE_TAKE_PHOTO) {
 
             if (resultCode == Activity.RESULT_OK) {
                 File takePhotoImageFile = PPDUtils.getDiskCacheFile(mContext,currentImageView.getId());
@@ -294,7 +314,7 @@ public class ZcZyPickPhotoDialog extends View {
                 // 图像捕获失败，提示用户
                 Toast.makeText(mContext,"拍照失败",Toast.LENGTH_SHORT);
             }
-        } else if (requestCode == PPDTools.PICK_IMAGE_ACTIVITY_REQUEST_CODE) {
+        } else if (mActionType == ACTION_TYPE.ACTION_TYPE_PICK_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri uri = data.getData();
                 if (uri != null) {
