@@ -12,7 +12,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.zczy.canvasdemo1.pickPhoto.MyImageView
+        <com.zczy.canvasdemo1.pickPhoto.UploadImageView
             android:id="@+id/test_imageView_1"
             android:layout_width="200dp"
             android:layout_height="200dp" />
@@ -32,7 +32,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.zczy.canvasdemo1.pickPhoto.MyImageView
+        <com.zczy.canvasdemo1.pickPhoto.UploadImageView
             android:id="@+id/test_imageView_2"
             android:layout_width="200dp"
             android:layout_height="200dp" />
@@ -52,7 +52,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.zczy.canvasdemo1.pickPhoto.MyImageView
+        <com.zczy.canvasdemo1.pickPhoto.UploadImageView
             android:id="@+id/test_imageView_3"
             android:layout_width="200dp"
             android:layout_height="200dp" />

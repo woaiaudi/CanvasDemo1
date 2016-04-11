@@ -288,10 +288,10 @@ public class ZcZyPickPhotoDialog extends View {
         this.iPPDClickListener = iPPDClickListener;
     }
 
-    public void PPD_onActivityResult(int requestCode, int resultCode, Intent data){
+    public String PPD_onActivityResult(int requestCode, int resultCode, Intent data){
         if (null == currentImageView || requestCode != IMGIDS.getInstance().queryRequestCode(currentImageView.getId())){
             //使用 requestCode标示 请求是从哪个图片对象 发过来的
-            return;
+            return "";
         }
 
         this.setVisibility(GONE);
@@ -301,18 +301,21 @@ public class ZcZyPickPhotoDialog extends View {
                 File takePhotoImageFile = PPDUtils.getDiskCacheFile(mContext,currentImageView.getId());
                 if (PPDUtils.getFileSize(takePhotoImageFile) > PPDTools.maxFileLength) {
                     Toast.makeText(mContext,"上传图片不能大于10M或者图片路径包含中文特殊字符",Toast.LENGTH_SHORT);
-                    return;
+                    return "";
                 }
                 Log.e(",,,,,,,,,,,,,,,,,",takePhotoImageFile.getAbsolutePath());
                 ImageLoader.getInstance().displayImage("file://"+takePhotoImageFile.getAbsolutePath(), currentImageView);
-
 //                runPublicImage(picFileFullName);
+
+                return takePhotoImageFile.getAbsolutePath();
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // 用户取消了图像捕获
+                return "";
             } else {
                 // 图像捕获失败，提示用户
                 Toast.makeText(mContext,"拍照失败",Toast.LENGTH_SHORT);
+                return "";
             }
         } else if (mActionType == ACTION_TYPE.ACTION_TYPE_PICK_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -322,15 +325,22 @@ public class ZcZyPickPhotoDialog extends View {
 
                     if (null == realPath||PPDUtils.getFileSize(new File(realPath)) > PPDTools.maxFileLength) {
                         Toast.makeText(mContext,"上传图片不能大于10M或者图片路径包含中文特殊字符",Toast.LENGTH_SHORT);
-                        return;
+                        return "";
                     }
                     Log.e(",,,,,,,,,,,,,,,,,",realPath);
                     ImageLoader.getInstance().displayImage("file://"+realPath, currentImageView);
+
 //                    runPublicImage(realPath);
+                    return realPath;
                 } else {
                     Toast.makeText(mContext,"从相册获取图片失败",Toast.LENGTH_SHORT);
+                    return "";
                 }
+            }else {
+                return "";
             }
+        }else {
+            return "";
         }
     }
 

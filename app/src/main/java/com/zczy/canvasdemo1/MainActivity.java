@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import com.android.http.RequestManager;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -30,6 +31,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         init();
         initImageLoader(this);
+
+        RequestManager.getInstance().init(this);
 
         guidUpdateView = GuidUpdateView.newInstance(this);
         guidUpdateView.GUV_setMarginTopForTopview(100);

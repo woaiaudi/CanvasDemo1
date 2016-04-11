@@ -3,6 +3,7 @@ package com.zczy.canvasdemo1.pickPhoto;
 import android.graphics.Rect;
 
 /**
+ * dialog 中 按钮的对象
  * Created by mac on 16/4/8.
  */
 public class PPDButtonBean {

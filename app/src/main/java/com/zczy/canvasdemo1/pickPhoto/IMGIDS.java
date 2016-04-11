@@ -59,4 +59,17 @@ public class IMGIDS {
         return returnRCODE;
     }
 
+    public int queryIMGID(int reqCode){
+        int returnIMGID = -1;
+        if (reqCode<IDS.size()){
+            try {
+                returnIMGID = Integer.parseInt(IDS.get(reqCode));
+            }catch (Exception e){
+                e.printStackTrace();
+                returnIMGID = -1;
+            }
+        }
+        return returnIMGID;
+    }
+
 }
