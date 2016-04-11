@@ -1,10 +1,20 @@
 package com.zczy.canvasdemo1;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.zczy.canvasdemo1.CustomView.DemoView1;
 import com.zczy.guidupdateview.GuidUpdateView;
 
@@ -13,11 +23,13 @@ public class MainActivity extends Activity {
 
     private GuidUpdateView guidUpdateView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        initImageLoader(this);
 
         guidUpdateView = GuidUpdateView.newInstance(this);
         guidUpdateView.GUV_setMarginTopForTopview(100);
@@ -39,6 +51,10 @@ public class MainActivity extends Activity {
                 guidUpdateView.GUV_dismiss();
             }
         });
+
+
+
+
     }
 
     private void init() {
@@ -54,9 +70,30 @@ public class MainActivity extends Activity {
             @Override
             public void onCircleButtonClickListener() {
                 //点击了原型按钮
-                guidUpdateView.GUV_show();
+                //guidUpdateView.GUV_show();
+                Intent intent = new Intent(MainActivity.this, PPDTestActivity.class);
+                startActivity(intent);
             }
         });
 
+    }
+
+    /**
+     *
+     * 方法描述 :图片缓存
+     *
+     */
+    public static void initImageLoader(Context context) {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+                context).threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .diskCacheSize(50 * 1024 * 1024)
+                // 50 Mb
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .writeDebugLogs() // Remove for release app
+                .build();
+
+        ImageLoader.getInstance().init(config);
     }
 }
