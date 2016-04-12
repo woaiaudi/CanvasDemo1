@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -127,7 +128,7 @@ public class ZcZyPickPhotoDialog extends View {
             for (int i = 0;i<btCount;i++){
                 PPDButtonBean itemBean = bottomButtonList.get(i);
                 Rect tmpRect = getBottomBtRectByIndex(i,canvasWidth,canvasHeight);
-                drawTextOnRect(canvas,mBgPaint,Color.WHITE,Color.DKGRAY,44f,itemBean.getName(),tmpRect);
+                drawTextOnRect(canvas,mBgPaint,Color.WHITE,Color.argb(255, 19, 347, 250),44f,itemBean.getName(),tmpRect);
                 itemBean.setContentRect(tmpRect);
                 bottomButtonList.set(i,itemBean);
             }
@@ -217,7 +218,10 @@ public class ZcZyPickPhotoDialog extends View {
 
         //画背景
         pPaint.setColor(bgColor);
-        pCanvas.drawRect(targetRect, pPaint);
+        //画圆角的背景
+        pCanvas.drawRoundRect(new RectF(targetRect.left,targetRect.top,targetRect.right,targetRect.bottom),15f,15f,pPaint);
+
+//        pCanvas.drawRect(targetRect, pPaint);
 
         //写文字
         pPaint.setTextSize(textSize);
@@ -245,6 +249,8 @@ public class ZcZyPickPhotoDialog extends View {
      * @return
      */
     private Rect getBottomBtRectByIndex(int index,int contentWidth, int canvasHeight){
+        int outPadding = 20;
+
         //按钮的高度
         int btHeight = canvasHeight/12;
 
@@ -257,11 +263,11 @@ public class ZcZyPickPhotoDialog extends View {
         Rect returnRect = null;
         if (index == 0){
             //最底部的 "取消"功能
-            returnRect = new Rect(0,canvasHeight-btHeight,contentWidth,canvasHeight);
+            returnRect = new Rect(outPadding,canvasHeight-btHeight,contentWidth-outPadding,canvasHeight);
         }else{
-            returnRect = new Rect(0,
+            returnRect = new Rect(outPadding,
                     canvasHeight-(index+1)*btHeight-paddingForCancleButton-index*btDividerHeight,
-                    contentWidth,
+                    contentWidth-outPadding,
                     canvasHeight-(index)*btHeight-paddingForCancleButton-index*btDividerHeight);
         }
         return returnRect;

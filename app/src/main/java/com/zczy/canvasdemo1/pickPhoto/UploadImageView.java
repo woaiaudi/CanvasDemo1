@@ -242,28 +242,30 @@ public class UploadImageView extends ImageView {
                     && imageLocalPath.length()>0){
                 Log.e(TAG,"要上传的图片是:"+imageLocalPath);
                 // TODO: 16/4/11  此时 需要 执行 图片上传
-                testOcrUpload(imageLocalPath);
 
-//                RequestManager.getInstance().request(0,loginUrl,(Object)null, new RequestManager.RequestListener() {
-//                        @Override
-//                        public void onRequest() {
-//
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(String s, String s1, int i) {
-//                            demoMap = new Gson().fromJson(s, Map.class);
-//
-//                            Log.e(TAG,s+"\n"+demoMap);
-//                            int imageViewId = IMGIDS.getInstance().queryIMGID(requestCode);
-//                            runUploadImage(imageLocalPath,imageViewId);
-//                        }
-//
-//                        @Override
-//                        public void onError(String s, String s1, int i) {
-//
-//                        }
-//                    },false,15*60*1000,0,3);
+                //测试 OCR驾照识别
+//                testOcrUpload(imageLocalPath);
+
+                RequestManager.getInstance().request(0,loginUrl,(Object)null, new RequestManager.RequestListener() {
+                        @Override
+                        public void onRequest() {
+
+                        }
+
+                        @Override
+                        public void onSuccess(String s, String s1, int i) {
+                            demoMap = new Gson().fromJson(s, Map.class);
+
+                            Log.e(TAG,s+"\n"+demoMap);
+                            int imageViewId = IMGIDS.getInstance().queryIMGID(requestCode);
+                            runUploadImage(imageLocalPath,imageViewId);
+                        }
+
+                        @Override
+                        public void onError(String s, String s1, int i) {
+
+                        }
+                    },false,15*60*1000,0,3);
 
 
             }
