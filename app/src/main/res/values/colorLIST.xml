@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="gray_text_hint">#dbdadd</color>
+    <color name="red">#FF0000</color>
+    <color name="TextColorGrays">#999999</color>
+</resources>

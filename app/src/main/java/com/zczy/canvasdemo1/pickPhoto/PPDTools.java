@@ -30,15 +30,24 @@ public class PPDTools {
         //拍照
         String state = Environment.getExternalStorageState();
         if (state.equals(Environment.MEDIA_MOUNTED)) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File tmpDesFile = PPDUtils.getDiskCacheFile(context,viewId);
+            int tmpRCode= IMGIDS.getInstance().queryRequestCode(viewId);
+
+            //使用系统相机
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpDesFile));
             intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-            int tmpRCode= IMGIDS.getInstance().queryRequestCode(viewId);
             ((Activity)context).startActivityForResult(intent, tmpRCode);
+
+            //使用自定义相机
+//            Intent intent = new Intent((Activity)context,PPDCameraActivity.class);
+//            intent.putExtra(PPDCameraActivity.EXTRA_TARGET_IMG_ID,viewId);
+//            ((Activity)context).startActivityForResult(intent, tmpRCode);
         } else {
             Toast.makeText(context,"SD 卡有误！",Toast.LENGTH_SHORT);
         }
+
+
     }
 
 

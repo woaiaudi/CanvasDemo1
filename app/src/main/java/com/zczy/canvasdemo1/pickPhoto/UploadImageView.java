@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.zczy.canvasdemo1.OCRDemo.OCRResultBean;
 import com.zczy.canvasdemo1.R;
 import com.zczy.canvasdemo1.UpLoadModel;
 
@@ -241,26 +242,28 @@ public class UploadImageView extends ImageView {
                     && imageLocalPath.length()>0){
                 Log.e(TAG,"要上传的图片是:"+imageLocalPath);
                 // TODO: 16/4/11  此时 需要 执行 图片上传
-                RequestManager.getInstance().request(0,loginUrl,(Object)null, new RequestManager.RequestListener() {
-                        @Override
-                        public void onRequest() {
+                testOcrUpload(imageLocalPath);
 
-                        }
-
-                        @Override
-                        public void onSuccess(String s, String s1, int i) {
-                            demoMap = new Gson().fromJson(s, Map.class);
-
-                            Log.e(TAG,s+"\n"+demoMap);
-                            int imageViewId = IMGIDS.getInstance().queryIMGID(requestCode);
-                            runUploadImage(imageLocalPath,imageViewId);
-                        }
-
-                        @Override
-                        public void onError(String s, String s1, int i) {
-
-                        }
-                    },false,15*60*1000,0,3);
+//                RequestManager.getInstance().request(0,loginUrl,(Object)null, new RequestManager.RequestListener() {
+//                        @Override
+//                        public void onRequest() {
+//
+//                        }
+//
+//                        @Override
+//                        public void onSuccess(String s, String s1, int i) {
+//                            demoMap = new Gson().fromJson(s, Map.class);
+//
+//                            Log.e(TAG,s+"\n"+demoMap);
+//                            int imageViewId = IMGIDS.getInstance().queryIMGID(requestCode);
+//                            runUploadImage(imageLocalPath,imageViewId);
+//                        }
+//
+//                        @Override
+//                        public void onError(String s, String s1, int i) {
+//
+//                        }
+//                    },false,15*60*1000,0,3);
 
 
             }
@@ -344,6 +347,11 @@ public class UploadImageView extends ImageView {
     public interface UIV_IUploadListener{
         public void onUploadSuccess(UpLoadModel imageBean);
         public void onUploadError(String msg);
+
+
+
+
+        public void onOCR(OCRResultBean ocrBean);
     }
     private UIV_IUploadListener iUploadListener;
 
@@ -381,6 +389,76 @@ public class UploadImageView extends ImageView {
 
     private static String loginUrl = HOST_NAME+"/mobile/app/mMember/doLogin.xhtml?password=DD4B21E9EF71E1291183A46B913AE6F2&userName=13000000002&mac=009acd134698b91d23bd18c01bbb866940022884506";
     private Map<String,Object> demoMap = new HashMap<String, Object>();
+
+
+    private void testOcrUpload(final String picFileFullName){
+        String key = "Q9cXVsRttfyGftPXC9ZWcy";				//用户ocrKey
+        String secret = "814cf1f4e689405a974f0c77560d98bb";	//用户ocrSecret
+        //证件类型(二代证2；行驶证6；驾照5；银行卡17；车牌19；名片 20其他详见附录)
+        String typeId = "5";
+        //String format = "xml";
+		String format = "json"; //(返回的格式可以是xml，也可以是json)
+        String url = "http://netocr.com/api/recog.do";		//http接口调用地址
+
+        RequestMap params = new RequestMap();
+        File uploadFile = new File(picFileFullName);
+        params.put("file", uploadFile);
+        params.put("key", key);
+        params.put("secret", secret);
+        params.put("typeId", typeId);
+        params.put("format", format);
+
+        //开启 上传中的动画
+        mCountDownTimer.start();
+        LoadControler mLoadController = RequestManager.getInstance().post(url, params, new RequestManager.RequestListener() {
+            @Override
+            public void onRequest() {
+                updateUploadState(UPLOAD_STATE.UPLOAD_STATE_UPLOADING);
+            }
+
+            @Override
+            public void onSuccess(String s, String s1, int i) {
+                Log.e(TAG,s);
+                try {
+                    OCRResultBean ocrResultBean = new Gson().fromJson(s,OCRResultBean.class);
+                    if (null != ocrResultBean){
+                        if (ocrResultBean.getMessage().getStatus() > 0){
+                            updateUploadState(UPLOAD_STATE.UPLOAD_STATE_COMPLETE);
+                            if (null != UploadImageView.this.iUploadListener){
+                                UploadImageView.this.iUploadListener.onOCR(ocrResultBean);
+                            }
+
+                        }else{
+                            updateUploadState(UPLOAD_STATE.UPLOAD_STATE_ERROR);
+                            if (null != UploadImageView.this.iUploadListener) {
+                                UploadImageView.this.iUploadListener.onUploadError(ocrResultBean.getMessage().getValue());
+                            }
+                        }
+                    }else{
+                        updateUploadState(UPLOAD_STATE.UPLOAD_STATE_ERROR);
+                        if (null != UploadImageView.this.iUploadListener) {
+                            UploadImageView.this.iUploadListener.onUploadError("识别失败");
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    updateUploadState(UPLOAD_STATE.UPLOAD_STATE_ERROR);
+                    if (null != UploadImageView.this.iUploadListener) {
+                        UploadImageView.this.iUploadListener.onUploadError("识别失败!");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onError(String s, String s1, int i) {
+                Log.e(TAG,s);
+                updateUploadState(UPLOAD_STATE.UPLOAD_STATE_ERROR);
+            }
+        },false,10000,0,2);
+    }
+
+
 
 
 }

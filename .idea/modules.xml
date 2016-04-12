@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/CanvasDemo1.iml" filepath="$PROJECT_DIR$/CanvasDemo1.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/guidupdateview/guidupdateview.iml" filepath="$PROJECT_DIR$/guidupdateview/guidupdateview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ocryuanmai/ocryuanmai.iml" filepath="$PROJECT_DIR$/ocryuanmai/ocryuanmai.iml" />
     </modules>
   </component>
 </project>

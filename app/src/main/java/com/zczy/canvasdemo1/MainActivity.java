@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.android.http.RequestManager;
@@ -13,12 +15,16 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.zczy.canvasdemo1.CustomView.DemoView1;
+import com.zczy.canvasdemo1.OCRDemo.OcrDemoActivity;
 import com.zczy.guidupdateview.GuidUpdateView;
+import com.zczy.ocryuanmai.OCRDemoMainActivity;
 
 public class MainActivity extends Activity {
     private static String TAG = MainActivity.class.getSimpleName();
 
     private GuidUpdateView guidUpdateView;
+
+    private Button bt1,bt2;
 
 
     @Override
@@ -29,8 +35,6 @@ public class MainActivity extends Activity {
         initImageLoader(this);
 
         RequestManager.getInstance().init(this);
-
-
 
         guidUpdateView = GuidUpdateView.newInstance(this);
         guidUpdateView.GUV_setMarginTopForTopview(100);
@@ -53,8 +57,25 @@ public class MainActivity extends Activity {
             }
         });
 
+        bt1 = (Button) findViewById(R.id.bt1);
+        bt2 = (Button) findViewById(R.id.bt2);
+        bt1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ///PPDTestActivity/OCRDemoMainActivity
+                Intent intent = new Intent(MainActivity.this, OcrDemoActivity.class);
+                startActivity(intent);
+            }
+        });
 
-
+        bt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ///PPDTestActivity/OCRDemoMainActivity
+                Intent intent = new Intent(MainActivity.this, OCRDemoMainActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -73,6 +94,7 @@ public class MainActivity extends Activity {
             public void onCircleButtonClickListener() {
                 //点击了原型按钮
                 //guidUpdateView.GUV_show();
+                //OcrDemoActivity/PPDTestActivity/OCRDemoMainActivity
                 Intent intent = new Intent(MainActivity.this, PPDTestActivity.class);
                 startActivity(intent);
             }

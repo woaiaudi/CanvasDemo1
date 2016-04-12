@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.zczy.canvasdemo1.OCRDemo.OcrDemoActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:gravity="center">
+
+        <com.zczy.canvasdemo1.pickPhoto.UploadImageView
+            android:id="@+id/ocr_imageView_1"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray_text_hint" />
+    <include
+        layout="@layout/ocr_result_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="12" />
+
+
+
+</LinearLayout>
