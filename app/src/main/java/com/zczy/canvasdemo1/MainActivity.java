@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.FrameLayout;
 
@@ -34,6 +35,8 @@ public class MainActivity extends Activity {
 
         RequestManager.getInstance().init(this);
 
+
+
         guidUpdateView = GuidUpdateView.newInstance(this);
         guidUpdateView.GUV_setMarginTopForTopview(100);
 
@@ -59,6 +62,7 @@ public class MainActivity extends Activity {
 
 
     }
+
 
     private void init() {
         FrameLayout layout=(FrameLayout) findViewById(R.id.demoview_content);

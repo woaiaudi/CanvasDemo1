@@ -8,60 +8,63 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <com.zczy.canvasdemo1.pickPhoto.UploadImageView
             android:id="@+id/test_imageView_1"
-            android:layout_width="200dp"
-            android:layout_height="200dp" />
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
 
         <Button
             android:id="@+id/test_uploadBt_1"
-            android:layout_marginLeft="22dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
             android:text="上传图片....." />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <com.zczy.canvasdemo1.pickPhoto.UploadImageView
             android:id="@+id/test_imageView_2"
-            android:layout_width="200dp"
-            android:layout_height="200dp" />
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
 
         <Button
             android:id="@+id/test_uploadBt_2"
-            android:layout_marginLeft="22dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
             android:text="上传图片....." />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <com.zczy.canvasdemo1.pickPhoto.UploadImageView
             android:id="@+id/test_imageView_3"
-            android:layout_width="200dp"
-            android:layout_height="200dp" />
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
 
         <Button
             android:id="@+id/test_uploadBt_3"
-            android:layout_marginLeft="22dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
             android:text="上传图片....." />
 
     </LinearLayout>

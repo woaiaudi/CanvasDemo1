@@ -7,8 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -75,6 +75,11 @@ public class UploadImageView extends ImageView {
     //绘制边框的 画笔
     private Paint mBgBodyPaint;
 
+    private CountDownTimer mCountDownTimer;
+
+    //记录 上传 图片 在垂直方向上的  偏移量
+    private long mOffsetOnVertical;
+
     private void init(Context context){
 
         mContext = context;
@@ -106,6 +111,35 @@ public class UploadImageView extends ImageView {
         mBgBodyPaint.setStrokeWidth(5f);
         mBgBodyPaint.setStyle(Paint.Style.STROKE); //绘制空心
         mBgBodyPaint.setColor(Color.DKGRAY);
+
+
+        /**
+         * 维护一个 图片上传的时钟,
+         * 每次 上传开始时,时钟开启
+         * 当 上传结束,时钟清零,停止
+         */
+        mCountDownTimer = new CountDownTimer(60*60*1000, 70) {
+            @Override
+            public void onTick(long l) {
+                if (UploadImageView.this.mUploadState != UPLOAD_STATE.UPLOAD_STATE_UPLOADING){
+                    //不在上传的时候 都调用cancel
+                    UploadImageView.this.mCountDownTimer.cancel();
+                }else {
+                    //最大偏移量30
+                    mOffsetOnVertical = mOffsetOnVertical+2;
+                    if (mOffsetOnVertical > 30){
+                        mOffsetOnVertical = 0;
+                    }
+                    //每次渲染,这样就维持了一个 固定频率的时钟,供上传动画使用
+                    UploadImageView.this.invalidate();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                UploadImageView.this.mUploadState = UPLOAD_STATE.UPLOAD_STATE_DEFAULT;
+            }
+        };
     }
     public UploadImageView(Context context) {
         super(context);
@@ -158,14 +192,14 @@ public class UploadImageView extends ImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         //这里只要处理 ,在上传 状态变价时,页面显示状态
-        Log.e(TAG,"当前 上传状态:"+this.mUploadState);
         int canvasWidth = canvas.getWidth();
         int canvasHeight = canvas.getHeight();
+
         canvas.drawRect(0,0,canvasWidth,canvasHeight,mBgBodyPaint);
 
         // 在画布上绘制缩放之后的baby位图
         if (this.mUploadState == UPLOAD_STATE.UPLOAD_STATE_UPLOADING){
-            canvas.drawBitmap(bitmapUploadingView, canvasWidth-bitmapUploadingView.getWidth()-5, canvasHeight-bitmapUploadingView.getHeight()-5, null);
+            canvas.drawBitmap(bitmapUploadingView, canvasWidth-bitmapUploadingView.getWidth()-5, canvasHeight-bitmapUploadingView.getHeight()-5-mOffsetOnVertical, null);
         }else if (this.mUploadState == UPLOAD_STATE.UPLOAD_STATE_COMPLETE){
             canvas.drawBitmap(bitmapUploadSuccessView, canvasWidth-bitmapUploadSuccessView.getWidth()-5, canvasHeight-bitmapUploadSuccessView.getHeight()-5, null);
         }else if (this.mUploadState == UPLOAD_STATE.UPLOAD_STATE_ERROR){
@@ -240,7 +274,8 @@ public class UploadImageView extends ImageView {
         params.put("mobile",demoMap.get("mobile").toString());
 
         updateUploadState(UPLOAD_STATE.UPLOAD_STATE_UPLOADING);
-
+        //开启 上传中的动画
+        mCountDownTimer.start();
         LoadControler mLoadController = RequestManager.getInstance().post(URL_UPLOAD, params, new RequestManager.RequestListener() {
             @Override
             public void onRequest() {
