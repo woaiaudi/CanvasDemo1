@@ -29,7 +29,7 @@ public class PPDTestActivity extends ActionBarActivity {
         test_uploadBt_3 = (Button) findViewById(R.id.test_uploadBt_3);
 
 
-        test_imageView_1.UIV_LoadImage("http://img1.gtimg.com/sports/pics/hv1/111/32/2050/133309521.jpg");
+        test_imageView_1.UIV_LoadImage("http://img1.gtimg.com/sports/pics/hv1/111/32/2050/133309521.jpg",R.mipmap.ic_launcher);
     }
 
 
@@ -38,8 +38,8 @@ public class PPDTestActivity extends ActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //mZcZyPickPhotoDialog.PPD_onActivityResult(requestCode,resultCode,data);
 
-        test_imageView_1.MIV_onActivityResult(requestCode,resultCode,data);
-        test_imageView_2.MIV_onActivityResult(requestCode,resultCode,data);
-        test_imageView_3.MIV_onActivityResult(requestCode,resultCode,data);
+        test_imageView_1.UIV_onActivityResult(requestCode,resultCode,data);
+        test_imageView_2.UIV_onActivityResult(requestCode,resultCode,data);
+        test_imageView_3.UIV_onActivityResult(requestCode,resultCode,data);
     }
 }
