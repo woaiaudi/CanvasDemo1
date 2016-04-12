@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
@@ -212,13 +213,21 @@ public class UploadImageView extends ImageView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (MotionEvent.ACTION_UP == event.getAction()){
-            //点击了图片,首先判断image 是否有图片在展示,
-            if (this.getDrawable()!=null){
-                Log.e(TAG,"有图");
-                // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
-            }else{
-                Log.e(TAG,"无图");
-                mZcZyPickPhotoDialog.PPD_openOnView(this);
+            float clickX = event.getX();
+            float clickY = event.getY();
+
+            int clickXInt = Float.valueOf(clickX).intValue();
+            int clickYInt = Float.valueOf(clickY).intValue();
+
+            if (new Rect(0,0,this.getWidth(),this.getHeight()).contains(clickXInt,clickYInt)){
+                //点击了图片,首先判断image 是否有图片在展示,
+                if (this.getDrawable()!=null){
+                    Log.e(TAG,"有图");
+                    // Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
+                }else{
+                    Log.e(TAG,"无图");
+                    mZcZyPickPhotoDialog.PPD_openOnView(this);
+                }
             }
         }
 
